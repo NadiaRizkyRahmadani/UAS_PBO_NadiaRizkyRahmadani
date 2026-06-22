@@ -12,7 +12,7 @@ class KaryawanTetap extends Karyawan {
         $this->opsiSahamId        = $data['opsi_saham_id'] ?? '';
     }
 
-    // Fokus Utama: Query SELECT * FROM dengan kondisi WHERE Tetap
+    // Tahap 4: Query internal untuk Karyawan Tetap
     public static function ambilData($db) {
         $list = [];
         $query = "SELECT * FROM tabel_karyawan WHERE jenis_karyawan = 'Tetap'";
@@ -25,9 +25,10 @@ class KaryawanTetap extends Karyawan {
         return $list;
     }
 
-    // Method abstract disiapkan dulu, hitungannya menyusul di Tahap 5
+    // Tahap 5: Overriding hitungGajiBersih sesuai logika bisnis Tetap
     public function hitungGajiBersih() {
-        return 0;
+        // Gaji Bersih = (hariKerjaMasuk * gajiDasarPerHari) + tunjanganKesehatan
+        return ($this->hariKerjaMasuk * $this->gajiDasarPerHari) + $this->tunjanganKesehatan;
     }
 
     public function tampilProfilKaryawan() {
@@ -36,7 +37,8 @@ class KaryawanTetap extends Karyawan {
         echo "<td>{$this->nama_karyawan}</td>";
         echo "<td>{$this->departemen}</td>";
         echo "<td>{$this->jenis_karyawan}</td>";
-        echo "<td>Tunjangan: Rp" . number_format($this->tunjanganKesehatan, 0, ',', '.') . ", Saham ID: {$this->opsiSahamId}</td>";
+        echo "<td>Rp " . number_format($this->hitungGajiBersih(), 0, ',', '.') . "</td>";
+        echo "<td>Tunjangan: Rp " . number_format($this->tunjanganKesehatan, 0, ',', '.') . ", Saham ID: {$this->opsiSahamId}</td>";
         echo "</tr>";
     }
 }

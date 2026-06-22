@@ -12,7 +12,7 @@ class KaryawanKontrak extends Karyawan {
         $this->agensiPenyalur     = $data['agensi_penyalur'] ?? '';
     }
 
-    // Fokus Utama: Query SELECT * FROM dengan kondisi WHERE Kontrak
+    // Tahap 4: Query internal untuk Karyawan Kontrak
     public static function ambilData($db) {
         $list = [];
         $query = "SELECT * FROM tabel_karyawan WHERE jenis_karyawan = 'Kontrak'";
@@ -25,9 +25,10 @@ class KaryawanKontrak extends Karyawan {
         return $list;
     }
 
-    // Method abstract disiapkan dulu, hitungannya menyusul di Tahap 5
+    // Tahap 5: Overriding hitungGajiBersih sesuai logika bisnis Kontrak
     public function hitungGajiBersih() {
-        return 0; 
+        // Gaji Bersih = hariKerjaMasuk * gajiDasarPerHari
+        return $this->hariKerjaMasuk * $this->gajiDasarPerHari;
     }
 
     public function tampilProfilKaryawan() {
@@ -36,6 +37,7 @@ class KaryawanKontrak extends Karyawan {
         echo "<td>{$this->nama_karyawan}</td>";
         echo "<td>{$this->departemen}</td>";
         echo "<td>{$this->jenis_karyawan}</td>";
+        echo "<td>Rp " . number_format($this->hitungGajiBersih(), 0, ',', '.') . "</td>";
         echo "<td>Durasi: {$this->durasiKontrakBulan} Bulan, Agensi: {$this->agensiPenyalur}</td>";
         echo "</tr>";
     }
